@@ -1,5 +1,6 @@
-import logging
 
+import inspect
+import logging
 import os
 
 HAS_COLOR_DEBUG = False
@@ -45,6 +46,72 @@ def env_log_level(var_name):
     return log_level
 
 
+def get_logger_name(depth=None):
+    depth = depth or 1
+    called_from = inspect.stack()[depth]
+    called_from_module = inspect.getmodule(called_from[0])
+    return called_from_module.__name__
+
+
+def get_class_logger_name(obj, depth=None):
+    '''Use to get a logger name equiv to module.Class'''
+    depth = depth or 1
+    # pprint.pprint(inspect.stack())
+    called_from = inspect.stack()[depth]
+    called_from_module = inspect.getmodule(called_from[0])
+    called_from_module_name = called_from_module.__name__
+    # if obj has a name, use it, else check it's class name
+    # This supports being pass a cls like in a meta class __new__ or a classmethor
+    #  of being passed self as used in a class init
+    obj_name = getattr(obj, '__name__', obj.__class__.__name__)
+    return '%s.%s' % (called_from_module_name, obj_name)
+
+
+# dont really need this, a log record has funcName
+def get_method_logger_name(depth=None):
+    depth = depth or 1
+    called_from = inspect.stack()[depth]
+    called_from_method = called_from[3]
+    # called_from_module = inspect.getmodule(called_from[0])
+    return called_from_method
+
+
+def get_logger():
+    '''Use to get a logger with name of callers __name__
+
+    Can be used in place of:
+
+        import logging
+        log = logging.getLogger(__name__)
+
+    That can be replaced with
+
+        from akl import alogging
+        log = alogging.get_logger()
+    '''
+    return logging.getLogger(get_logger_name(depth=2))
+
+
+def get_class_logger(obj):
+    '''Use to get a logger with name equiv to module.Class
+
+    in a regular class __init__, use like:
+
+        self.log = alogging.get_class_logger(self)
+
+
+    In a metaclass __new__, use like:
+
+        log = alogging.get_class_logger(cls)
+    '''
+
+    return logging.getLogger(get_class_logger_name(obj, depth=2))
+
+
+def get_method_logger():
+    return logging.getLogger(get_method_logger_name(depth=2))
+
+
 def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter=None, use_root_logger=False, log_file=None):
     name = name or 'akl'
 
@@ -84,8 +151,8 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter
         mp_log.addHandler(stream_handler)
 
     if use_root_logger:
-        setup_root_logger(root_level=logging.DEBUG,
-                          handlers=[stream_handler, file_handler, null_handler])
+        setup_root_logger(root_level=logging.DEBUG)
+                          # handlers=[stream_handler, file_handler, null_handler])
 
 
 def setup_root_logger(root_level=None, handlers=None):
