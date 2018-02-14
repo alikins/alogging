@@ -3,6 +3,7 @@ import functools
 import inspect
 import logging
 import os
+import sys
 
 HAS_COLOR_DEBUG = False
 try:
@@ -16,10 +17,10 @@ except ImportError as e:
 # WARNING: STACK_INFO=True is not compatible with py2 and will break
 STACK_INFO = False
 
-DEFAULT_FMT_STRING = """%(asctime)s,%(msecs)03d %(relativeCreated)d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
+DEFAULT_FMT_STRING = """|%(stack_depth)s| %(asctime)s %(relativeCreated)d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
 
 # for use with datefmt="%H:%M:%S" if you still want the ',123' msec info
-NO_DATE_FMT_STRING = """%(asctime)s,%(msecs)03d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
+NO_DATE_FMT_STRING = """|%(stack_depth)s| %(asctime)s,%(msecs)03d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s %(stack_info)s"""
 
 COLON_FMT_STRING = '%(asctime)s processName:%(processName)s process:%(process)d threadName ' + \
     '%(threadName)-2s level: %(levelname)s module: %(module)s name: %(name)s ' + \
@@ -28,7 +29,8 @@ COLON_FMT_STRING = '%(asctime)s processName:%(processName)s process:%(process)d 
 EVERYTHING_FMT_STRING = '%(asctime)s %(levelname)-0.1s %(levelno)-0.1d %(processName)-0.1s ' + \
     '%(process)d %(threadName)s %(thread)d %(name)s %(module)s %(filename)s %(funcName)s %(lineno)d - %(message)s'
 
-DEFAULT_FILE_FMT_STRING = DEFAULT_STREAM_FMT_STRING = DEFAULT_FMT_STRING
+DEFAULT_FILE_FMT_STRING = DEFAULT_FMT_STRING
+DEFAULT_STREAM_FMT_STRING = NO_DATE_FMT_STRING
 DEFAULT_FILE_DATEFMT_STRING = DEFAULT_STREAM_DATEFMT_STRING = DEFAULT_DATEFMT_STRING = None
 
 # TODO: add a stack depth indicator filter?
@@ -45,12 +47,12 @@ def env_log_level(var_name):
 
     # be liberal in log env var name cap
     for env_var_candidates in (var_name, var_name.upper(), var_name.lower()):
-        print(env_var_candidates)
+        # print(env_var_candidates)
         env_var_value = os.environ.get(var_name, None)
         if env_var_value is not None:
             continue
 
-    print('%s=%s' % (var_name, env_var_value))
+    # print('%s=%s' % (var_name, env_var_value))
 
     if not env_var_value:
         return None
@@ -157,7 +159,7 @@ def t(func):
     log.debug('bar2')
 
     log_name = get_class_logger_name(func, depth=2)
-    #log_name = get_class_logger_name(func, depth=2)
+    # log_name = get_class_logger_name(func, depth=2)
     log = logging.getLogger(log_name)
     log.debug('cccccccc')
 
@@ -167,9 +169,9 @@ def t(func):
     # log_name = get_logger_name(depth=2)
     # log_name = get_logger_name(depth=1)
     def wrapper(*args, **kwargs):
-        #log_name = get_method_logger_name(depth=1)
-        #print(get_logger_name())
-        #print(get_logger_name(depth=2))
+        # log_name = get_method_logger_name(depth=1)
+        # print(get_logger_name())
+        # print(get_logger_name(depth=2))
         # print('ga: %s' % getattr(wrapper, "__name__", None))
         # func_name = getattr(func, "__qualname__", '%s.%s' % (log_name, func.__name__))
 
@@ -199,8 +201,6 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter
     stream_formatter = stream_formatter or logging.Formatter(fmt=fmt_string)
     file_formatter = file_formatter or logging.Formatter(fmt=fmt_string)
 
-    null_handler = logging.NullHandler()
-
     log = logging.getLogger(name)
 
     log.setLevel(level)
@@ -216,7 +216,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter
     file_handler.setFormatter(file_formatter)
 
     log.addHandler(stream_handler)
-    log.addHandler(file_handler)
+    # log.addHandler(file_handler)
 
     if use_multiprocessing:
         import multiprocessing
@@ -227,7 +227,6 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter
 
     if use_root_logger:
         setup_root_logger(root_level=logging.DEBUG)
-                          # handlers=[stream_handler, file_handler, null_handler])
 
 
 def setup_root_logger(root_level=None, handlers=None):
@@ -249,21 +248,24 @@ def default_setup(name=None):
     stream_fmt_string = os.environ.get('%s_fmt_string' % name, None) or DEFAULT_STREAM_FMT_STRING
     # default_fmt_string = stream_fmt_string
     stream_datefmt_string = os.environ.get('%s_datefmt_string' % name, None) or DEFAULT_STREAM_DATEFMT_STRING
+    stream_datefmt_string = "%H:%M:%S"
 
+    HAS_COLOR_DEBUG=False
     if HAS_COLOR_DEBUG:
         color_groups = [
                         ('funcName', ['funcName', 'lineno']),
                         ('levelname', ['levelno']),
                         ('name', ['stack_info']),
                         # ('name', ['filename', 'module',  'pathname']),
-                        ('process', ['processName'])]
+                        ('process', ['processName', 'stack_depth'])]
         stream_formatter = color_debug.color_debug.ColorFormatter(fmt=stream_fmt_string,
                                                                   default_color_by_attr='name',
                                                                   auto_color=True,
                                                                   color_groups=color_groups,
                                                                   datefmt=stream_datefmt_string)
     else:
-        stream_formatter = logging.Formatter(fmt=stream_fmt_string)
+        stream_formatter = logging.Formatter(fmt=stream_fmt_string,
+                                             datefmt=stream_datefmt_string)
 
     log_level = env_log_level('%s_log_level' % name) or logging.DEBUG
 
@@ -272,3 +274,21 @@ def default_setup(name=None):
 
     # import logging_tree
     # logging_tree.printout()
+
+
+# From https://stackoverflow.com/a/47956089
+def get_stack_size():
+    """Get stack size for caller's frame.
+
+    %timeit len(inspect.stack())
+    8.86 ms +/- 42.5 us per loop (mean +/- std. dev. of 7 runs, 100 loops each)
+    %timeit get_stack_size()
+    4.17 us +/- 11.5 ns per loop (mean +/- std. dev. of 7 runs, 100000 loops each)
+    """
+    size = 2  # current frame and caller's frame always exist
+    while True:
+        try:
+            sys._getframe(size)
+            size += 1
+        except ValueError:
+            return size - 1  # subtract current frame
