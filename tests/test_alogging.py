@@ -87,3 +87,23 @@ def test_t():
 
     import logging_tree
     logging_tree.printout()
+
+
+def test_stack_info():
+    alogging.STACK_INFO = True
+
+    alogging.default_setup()
+    slog = alogging.get_logger()
+
+    def level_two(blip):
+        slog.debug('some stuff, should include stack_info, blip=%s', blip)
+        return blip
+
+    def level_one(blip):
+        slog.debug('alogging.STACK_INFO: %s', alogging.STACK_INFO)
+        alogging.a(blip)
+        return level_two(blip)
+
+    resp = level_one('stuff')
+    slog.debug('resp: %s', resp)
+
