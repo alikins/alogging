@@ -153,19 +153,22 @@ def a(*args):
 def t(func):
     log_name = get_method_logger_name(depth=2)
     log = logging.getLogger(log_name)
-    log.debug('foo1')
+    log.debug('foo1, log_name=%s', log_name)
 
     log_name1 = get_logger_name(depth=2)
-    log = logging.getLogger(log_name)
-    log.debug('bar2')
+    # log1 = logging.getLogger(log_name1)
+    # log1.debug('bar2, log_name_1=%s', log_name1)
 
-    log_name = get_class_logger_name(func, depth=2)
     # log_name = get_class_logger_name(func, depth=2)
-    log = logging.getLogger(log_name)
-    log.debug('cccccccc')
+    # log_name = get_class_logger_name(func, depth=2)
+    # log = logging.getLogger(log_name)
+    # log.debug('cccccccc, log_name=%s', log_name)
 
-    log2 = logging.getLogger('%s.%s' % (log_name1, log_name))
-    log2.debug('xxxxxxxxxxxxxxxx')
+    log2_name = '%s.%s' % (log_name1, log_name)
+    # log.debug('log2_name: %s', log2_name)
+
+    # log2 = logging.getLogger(log2_name)
+    # log2.debug('xxxxxxxxxxxxxxxx, log2=%s, log2_name=%s', log2, log2_name)
 
     # log_name = get_logger_name(depth=2)
     # log_name = get_logger_name(depth=1)
@@ -174,10 +177,26 @@ def t(func):
         # print(get_logger_name())
         # print(get_logger_name(depth=2))
         # print('ga: %s' % getattr(wrapper, "__name__", None))
-        # func_name = getattr(func, "__qualname__", '%s.%s' % (log_name, func.__name__))
+        qual_name = getattr(func, "__qualname__", None)
+        func_name = qual_name or func.__name__
+        # full_func_name = getattr(func, "__qualname__", '%s.%s' % (log_name, func.__name__))
+        full_func_name = func_name or '%s.%s' % (log_name, func.__name__)
 
         log = logging.getLogger(log_name)
-        log.debug('t locals()=%s args=%s kwargs=%s', repr(locals()), repr(args), repr(kwargs))
+        log.debug('-- log_name=%s, log_name1=%s, log2_name=%s, qual_name=%s, func_name=%s, full_func_name=%s',
+                  log_name, log_name1, log2_name, qual_name, func_name, full_func_name)
+        log4_name = '%s.%s.%s' % (log_name1, log_name, func.__name__)
+        log4 = get_logger(log4_name)
+
+        # log4.debug('log4=%s', log4_name)
+        # log.debug('t locals()=%s args=%s kwargs=%s', repr(locals()), repr(args), repr(kwargs))
+        log4.debug('t locals()=%s args=%s kwargs=%s', repr(locals()), repr(args), repr(kwargs))
+
+        log2 = get_class_logger(func, depth=1)
+        # log2.debug('wrapper? %s', func_name)
+
+        log3 = get_logger(func_name)
+        # log3.debug('log_name=%s, log_name1=%s, log2_name=%s, logfunc_name=%s', log_name, log_name1, log2_name, func_name)
 
         try:
             ret = func(*args, **kwargs)
@@ -186,6 +205,7 @@ def t(func):
             raise
 
         log.debug('t ret=%s', repr(ret))
+        log4.debug('t ret=%s', repr(ret))
 
         return ret
 

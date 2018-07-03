@@ -1,4 +1,4 @@
-from akl.echo import dd, echo, echo_format
+from akl.echo import echo, echo_format
 
 x = []
 for i in range(37, 52):
@@ -6,11 +6,13 @@ for i in range(37, 52):
 
 blip = [1, 2, 3, 4, x, ['list1', 'list2', {'some_dict_key': ('a tuple 1', 'a tuple 2')}]]
 
+
 def blorp(thing):
     for i in 'adfafadfasdf':
         echo(i)
 
     echo(thing)
+
 
 def main():
 
@@ -29,6 +31,18 @@ def main():
 
     print('blorp()')
     blorp(blip)
+
+
+# These are all printing to stdout, so not much to test
+# until we either stop side effect or capture stdout
+# and examine. TODO...
+def test_main():
+    main()
+
+
+def test_blorp():
+    blorp(blip)
+
 
 if __name__ == '__main__':
     main()
