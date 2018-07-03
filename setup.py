@@ -22,7 +22,7 @@ test_requirements = [
 
 setup(
     name='akl',
-    version='0.2.0',
+    version='0.2.1',
     description="python utils used by alikins",
     long_description=readme,
     author="Adrian Likins",
