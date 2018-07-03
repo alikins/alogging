@@ -17,10 +17,11 @@ except ImportError as e:
 # WARNING: STACK_INFO=True is not compatible with py2 and will break
 STACK_INFO = False
 
-DEFAULT_FMT_STRING = """|%(stack_depth)s| %(asctime)s %(relativeCreated)d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
+DEFAULT_FMT_STRING = """%(asctime)s %(relativeCreated)d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
 
 # for use with datefmt="%H:%M:%S" if you still want the ',123' msec info
-NO_DATE_FMT_STRING = """|%(stack_depth)s| %(asctime)s,%(msecs)03d %(levelname)-0.1s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s %(stack_info)s"""
+NO_DATE_FMT_STRING = """%(asctime)s,%(msecs)03d %(levelname)-0.1s %(name)s %(processName)s:%(process)d %(funcName)s:%(lineno)d - %(message)s"""
+STACK_INFO_FMT_STRING = """ %(stack_info)s"""
 
 COLON_FMT_STRING = '%(asctime)s processName:%(processName)s process:%(process)d threadName ' + \
     '%(threadName)-2s level: %(levelname)s module: %(module)s name: %(name)s ' + \
@@ -191,8 +192,10 @@ def t(func):
     return functools.update_wrapper(wrapper, func)
 
 
-def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter=None, use_root_logger=False, log_file=None):
-    name = name or 'akl'
+def setup(name=None, level=None, fmt=None, stream_formatter=None,
+          file_formatter=None, use_root_logger=False, log_file=None):
+    if name is None:
+        name = 'akl'
 
     use_multiprocessing = False
 
@@ -228,6 +231,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None, file_formatter
     if use_root_logger:
         setup_root_logger(root_level=logging.DEBUG)
 
+    return log
 
 def setup_root_logger(root_level=None, handlers=None):
     if not handlers:
@@ -249,17 +253,20 @@ def default_setup(name=None):
     # default_fmt_string = stream_fmt_string
     stream_datefmt_string = os.environ.get('%s_datefmt_string' % name, None) or DEFAULT_STREAM_DATEFMT_STRING
     stream_datefmt_string = "%H:%M:%S"
+    if STACK_INFO:
+        stream_fmt_string += STACK_INFO_FMT_STRING
 
-    HAS_COLOR_DEBUG=False
     if HAS_COLOR_DEBUG:
         color_groups = [
                         ('funcName', ['funcName', 'lineno']),
                         ('levelname', ['levelno']),
                         ('name', ['stack_info']),
                         # ('name', ['filename', 'module',  'pathname']),
-                        ('process', ['processName', 'stack_depth'])]
+                        ('process', ['processName'])
+        ]
         stream_formatter = color_debug.color_debug.ColorFormatter(fmt=stream_fmt_string,
                                                                   default_color_by_attr='name',
+                                                                  #default_color_by_attr='process',
                                                                   auto_color=True,
                                                                   color_groups=color_groups,
                                                                   datefmt=stream_datefmt_string)
@@ -269,8 +276,8 @@ def default_setup(name=None):
 
     log_level = env_log_level('%s_log_level' % name) or logging.DEBUG
 
-    setup(name=name, level=log_level, fmt=DEFAULT_FMT_STRING, stream_formatter=stream_formatter,
-          use_root_logger=True)
+    return setup(name=name, level=log_level, fmt=DEFAULT_FMT_STRING, stream_formatter=stream_formatter,
+                 use_root_logger=True)
 
     # import logging_tree
     # logging_tree.printout()
