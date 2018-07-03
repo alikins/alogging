@@ -1,4 +1,5 @@
 import logging
+import mock
 
 from akl import alogging
 
@@ -85,8 +86,17 @@ def test_t():
     sub_inst = helpers.SubAnotherClass('SubF00')
     res4 = sub_inst.blip()
 
-    import logging_tree
-    logging_tree.printout()
+    @t
+    def raise_exception():
+        raise Exception('ttt')
+
+    try:
+        raise_exception()
+    except Exception as e:
+        log.debug(e)
+        return
+
+    assert False, 'expected an exception to be raised here'
 
 
 def test_stack_info():
@@ -106,4 +116,25 @@ def test_stack_info():
 
     resp = level_one('stuff')
     slog.debug('resp: %s', resp)
+
+
+def test_env_log_level():
+    with mock.patch('akl.alogging.os.environ', new={'FOO_LOG_LEVEL': 'DEBUG', 'BAR_LOG_LEVEL': 'sdfsdf'}) as me:
+        res = alogging.env_log_level('FOO_LOG_LEVEL')
+        log.debug('res: %s', res)
+        log.debug('me: %s', me)
+
+        try:
+            res = alogging.env_log_level('BAR_LOG_LEVEL')
+        except Exception as e:
+            log.exception(e)
+            return
+        log.debug('res: %s', res)
+        log.debug('me: %s', me)
+        assert False, 'Expected a Exception here for invalid log level'
+
+
+def test_get_stack_size():
+    res = alogging.get_stack_size()
+    log.debug('res: %s', res)
 
