@@ -21,19 +21,19 @@ test_requirements = [
 ]
 
 setup(
-    name='akl',
+    name='alogging',
     version='0.2.1',
-    description="python utils used by alikins",
+    description="a collection of logging utilities",
     long_description=readme,
     author="Adrian Likins",
     author_email='adrian@likins.com',
-    url='https://github.com/alikins/akl',
-    packages=find_packages(include=['akl']),
+    url='https://github.com/alikins/alogging',
+    packages=find_packages(include=['alogging']),
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
     zip_safe=False,
-    keywords='akl',
+    keywords='alogging',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
