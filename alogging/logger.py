@@ -253,6 +253,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
 
     return log
 
+
 def setup_root_logger(root_level=None, handlers=None):
     if not handlers:
         handlers = [logging.NullHandler()]
@@ -286,7 +287,7 @@ def default_setup(name=None):
         ]
         stream_formatter = color_debug.color_debug.ColorFormatter(fmt=stream_fmt_string,
                                                                   default_color_by_attr='name',
-                                                                  #default_color_by_attr='process',
+                                                                  # default_color_by_attr='process',
                                                                   auto_color=True,
                                                                   color_groups=color_groups,
                                                                   datefmt=stream_datefmt_string)

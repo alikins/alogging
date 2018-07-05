@@ -1,7 +1,8 @@
 import logging
 import mock
 
-from akl import alogging
+# from akl import alogging
+import alogging
 
 import helpers
 
@@ -55,7 +56,7 @@ def test_get_method_logger():
 
 # TODO: paramaterize
 def test_a():
-    from akl.alogging import a
+    from alogging import a
 
     foo = {'blip': [1, 'two', 3.0, []]}
 
@@ -63,7 +64,7 @@ def test_a():
 
 
 def test_t():
-    from akl.alogging import t
+    from alogging import t
 
     # foo = {'blip': [1, 'two', 3.0, []]}
 
@@ -119,7 +120,7 @@ def test_stack_info():
 
 
 def test_env_log_level():
-    with mock.patch('akl.alogging.os.environ', new={'FOO_LOG_LEVEL': 'DEBUG', 'BAR_LOG_LEVEL': 'sdfsdf'}) as me:
+    with mock.patch('alogging.os.environ', new={'FOO_LOG_LEVEL': 'DEBUG', 'BAR_LOG_LEVEL': 'sdfsdf'}) as me:
         res = alogging.env_log_level('FOO_LOG_LEVEL')
         log.debug('res: %s', res)
         log.debug('me: %s', me)

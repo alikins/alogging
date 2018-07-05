@@ -1,11 +1,12 @@
 import logging
 
-from akl import pp, pf
+from alogging import pp, pf
 
 log = logging.getLogger(__name__)
 
 
 BAR = {'blip': 'baz'}
+
 
 class Foo(object):
     class_baz = 'baz'

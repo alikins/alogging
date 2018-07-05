@@ -1,5 +1,5 @@
 
-from akl import alogging
+import alogging
 
 
 def on_module_import():

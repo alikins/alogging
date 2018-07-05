@@ -4,7 +4,7 @@
 import inspect
 import re
 
-from akl.pp import pf
+from alogging.pp import pf
 
 
 def echo_format(value, depth=1, caller_name='echo_format'):

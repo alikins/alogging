@@ -1,4 +1,4 @@
-from akl import alogging
+import alogging
 
 
 @alogging.t
