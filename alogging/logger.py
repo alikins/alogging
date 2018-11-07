@@ -215,7 +215,7 @@ def t(func):
 def setup(name=None, level=None, fmt=None, stream_formatter=None,
           file_formatter=None, use_root_logger=False, log_file=None):
     if name is None:
-        name = 'akl'
+        name = 'alogging'
 
     use_multiprocessing = False
 
@@ -228,7 +228,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
 
     log.setLevel(level)
 
-    log_file = log_file or os.path.expanduser('~/.akl.log')
+    log_file = log_file or os.path.expanduser('~/.alogging.log')
     file_handler = logging.FileHandler(log_file)
     file_handler.setLevel(level)
 
@@ -239,7 +239,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
     file_handler.setFormatter(file_formatter)
 
     log.addHandler(stream_handler)
-    # log.addHandler(file_handler)
+    log.addHandler(file_handler)
 
     if use_multiprocessing:
         import multiprocessing
@@ -250,6 +250,9 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
 
     if use_root_logger:
         setup_root_logger(root_level=logging.DEBUG)
+
+    # import logging_tree
+    # logging_tree.printout()
 
     return log
 
@@ -274,7 +277,8 @@ def default_setup(name=None):
     # default_fmt_string = stream_fmt_string
     stream_datefmt_string = os.environ.get('%s_datefmt_string' % name, None) or DEFAULT_STREAM_DATEFMT_STRING
     stream_datefmt_string = "%H:%M:%S"
-    if STACK_INFO:
+    stack_info = os.environ.get('ALOGGING_STACK_INFO', None) or STACK_INFO
+    if stack_info:
         stream_fmt_string += STACK_INFO_FMT_STRING
 
     if HAS_COLOR_DEBUG:
@@ -300,8 +304,9 @@ def default_setup(name=None):
     return setup(name=name, level=log_level, fmt=DEFAULT_FMT_STRING, stream_formatter=stream_formatter,
                  use_root_logger=True)
 
-    # import logging_tree
-    # logging_tree.printout()
+
+# easier to remember alias
+quickstart = default_setup
 
 
 # From https://stackoverflow.com/a/47956089
