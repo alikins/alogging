@@ -4,7 +4,7 @@
 help:
 	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-build clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+clean: clean-build clean-pyc clean-test clean-docs ## remove all build, test, coverage and Python artifacts
 
 
 clean-build: ## remove build artifacts
@@ -42,6 +42,8 @@ coverage: ## check code coverage quickly with the default Python
 
 clean-docs:
 	rm -rf docs/_build/*
+	rm -f docs/alogging.rst
+	rm -f docs/modules.rst
 
 docs: ## generate Sphinx HTML documentation, including API docs
 	# rm -f docs/color_debug.rst
