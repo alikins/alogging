@@ -1,0 +1,4 @@
+pytest
+mock
+git+git://github.com/alikins/color_debug@master#egg=color_debug
+logging_tree
