@@ -120,7 +120,7 @@ def test_stack_info():
 
 
 def test_env_log_level():
-    with mock.patch('alogging.os.environ', new={'FOO_LOG_LEVEL': 'DEBUG', 'BAR_LOG_LEVEL': 'sdfsdf'}) as me:
+    with mock.patch('alogging.logger.os.environ', new={'FOO_LOG_LEVEL': 'DEBUG', 'BAR_LOG_LEVEL': 'sdfsdf'}) as me:
         res = alogging.env_log_level('FOO_LOG_LEVEL')
         log.debug('res: %s', res)
         log.debug('me: %s', me)
