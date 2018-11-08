@@ -46,9 +46,9 @@ clean-docs:
 	rm -f docs/modules.rst
 
 docs: ## generate Sphinx HTML documentation, including API docs
-	# rm -f docs/color_debug.rst
-	# rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ alogging
+	rm -f docs/alogging.rst
+	rm -f docs/modules.rst
+	sphinx-apidoc --ext-autodoc -M --implicit-namespaces -f -o docs/ alogging
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 

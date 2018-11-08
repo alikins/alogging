@@ -15,6 +15,8 @@
 
 import sys
 import os
+import logging
+log = logging.getLogger(__name__)
 
 # If extensions (or modules to document with autodoc) are in another
 # directory, add these directories to sys.path here. If the directory is
@@ -32,6 +34,10 @@ project_root = os.path.dirname(cwd)
 sys.path.insert(0, project_root)
 
 import alogging
+
+log = alogging.default_setup(name='alogging_docs')
+log.debug('cwd: %s', cwd)
+log.debug('project_root: %s', project_root)
 
 # -- General configuration ---------------------------------------------
 

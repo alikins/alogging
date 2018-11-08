@@ -12,6 +12,15 @@ log = alogging.get_logger()
 alogging.default_setup('')
 
 
+def a_callable(foo=None):
+    return b_callable(foo, ['bar'])
+
+@alogging.t
+def b_callable(foo=None, bar=None):
+    #return '%s+%s' % (foo, bar)
+    return foo + bar
+
+
 def test_log_setup():
     log = alogging.default_setup('akl')
     log.debug('foo %s', 'blip', extra={'bar': 'baz'})
@@ -60,7 +69,55 @@ def test_a():
 
     foo = {'blip': [1, 'two', 3.0, []]}
 
-    a(foo)
+    res = a(foo)
+    assert res == foo
+
+
+def test_a_callable():
+    things = [0, '', None, False, 1.1]
+    exp_res = a_callable(foo=things)
+
+    res = alogging.a(a_callable(foo=things))
+
+    log.debug('exp_res: %s', exp_res)
+    log.debug('res: %s', res)
+
+    assert isinstance(res, list)
+    assert 1.1 in res
+
+    assert res == exp_res
+
+
+def test_plain_t():
+    from alogging import t
+
+    @t
+    def frob_the_swab_bar(foo, bar):
+        return [bar, foo, '%s+++%s' % (foo, bar)]
+
+    frob_the_swab_bar('javale', 'mcgee')
+
+
+from alogging import t
+
+
+@t
+class Stuff(object):
+    thing = 1.1
+
+    def __init__(self, a_color, mode=None):
+        self.a_color = a_color
+        self.bbb = 'beeeee'
+
+    @t
+    def add_color(self, b_color, opacity=None):
+        return self.a_color + b_color
+
+
+def test_t_class():
+    stuff = Stuff('red', mode='chaos')
+    new_color = stuff.add_color('green', opacity=91.1)
+    log.debug('new_color: %s', new_color)
 
 
 def test_t():
@@ -73,12 +130,14 @@ def test_t():
         return helpers.some_method(bar)
 
     res = local_method('expected')
-    log.debug('res: %s', res)
+    # log.debug('res: %s', res)
+    res = alogging.a(local_method('expected'))
+    # log.debug('res via a: %s', res)
 
     some_inst = helpers.SomeClass()
     res2 = some_inst.another_method('mmm', 'foobar')
 
-    log.debug('res2: %s', res2)
+    # log.debug('res2: %s', res2)
 
     another_inst = helpers.AnotherClass('fOO')
     res3 = another_inst.blip()

@@ -5,6 +5,9 @@ import logging
 import os
 import sys
 
+from alogging.pp import pf
+import prettyprinter
+
 HAS_COLOR_DEBUG = False
 try:
     # https://github.com/alikins/color_debug
@@ -110,7 +113,7 @@ def get_logger(name=None, depth=2):
 
     That can be replaced with
 
-        from akl import alogging
+        import alogging
         log = alogging.get_logger()
     '''
     name = name or get_logger_name(depth=depth)
@@ -138,7 +141,11 @@ def get_method_logger(depth=2):
 
 
 def a(*args):
+    '''Log the args of 'a' and returns the args.
 
+       Basically, log info about whatever it wraps, but returns it so
+       it can continue to be callled.
+    '''
     log_name = get_logger_name(depth=2)
     log = logging.getLogger(log_name)
     if STACK_INFO:
@@ -151,20 +158,26 @@ def a(*args):
 
 
 def t(func):
-    log_name = get_method_logger_name(depth=2)
-    log = logging.getLogger(log_name)
-    log.debug('foo1, log_name=%s', log_name)
+    '''Decorate a callable (class or method) and log it's args and return values
 
+    The loggers created and used should reflect where the object is defined/used.
+
+    ie, 'mycode.utils.math.Summer.total' for calling 'total' method on an instance of mycode.utils.math.Summer
+    '''
+    log_name = get_method_logger_name(depth=2)
+    # _log = logging.getLogger(log_name)
+    # log.debug('log_name=%s', log_name)
+    # mlog.debug('depth0=%s depth1=%s', get_method_logger_name(depth=0), get_method_logger_name(depth=1))
     log_name1 = get_logger_name(depth=2)
-    # log1 = logging.getLogger(log_name1)
-    # log1.debug('bar2, log_name_1=%s', log_name1)
+    # _log1 = logging.getLogger(log_name1)
+    # log1.debug('log_name_1=%s', log_name1)
 
     # log_name = get_class_logger_name(func, depth=2)
     # log_name = get_class_logger_name(func, depth=2)
     # log = logging.getLogger(log_name)
     # log.debug('cccccccc, log_name=%s', log_name)
 
-    log2_name = '%s.%s' % (log_name1, log_name)
+    # log2_name = '%s.%s' % (log_name1, log_name)
     # log.debug('log2_name: %s', log2_name)
 
     # log2 = logging.getLogger(log2_name)
@@ -183,19 +196,26 @@ def t(func):
         full_func_name = func_name or '%s.%s' % (log_name, func.__name__)
 
         log = logging.getLogger(log_name)
-        log.debug('-- log_name=%s, log_name1=%s, log2_name=%s, qual_name=%s, func_name=%s, full_func_name=%s',
-                  log_name, log_name1, log2_name, qual_name, func_name, full_func_name)
-        log4_name = '%s.%s.%s' % (log_name1, log_name, func.__name__)
-        log4 = get_logger(log4_name)
+        # log.debug('-- log_name=%s, log_name1=%s, log2_name=%s, qual_name=%s, func_name=%s, full_func_name=%s',
+        #          log_name, log_name1, log2_name, qual_name, func_name, full_func_name)
 
+        log4_name = '%s.%s.%s' % (log_name1, log_name, func.__name__)
+        _log4 = get_logger(log4_name)
+
+        _log4.debug('%s() called with args: %s, kwargs: %s', full_func_name, pf(args), pf(kwargs))
+        # _log4.debug('%s called with kwargs: %s', full_func_name, pf(kwargs))
+        # _log4.debug('%s(%s, %s)', full_func_name,
+        #            ', '.join([arg for arg in args if not isinstance(arg, func.__class__)]),
+        #            ', '.join(['%s=%s' % (x, y) for x, y in kwargs.items()]))
         # log4.debug('log4=%s', log4_name)
         # log.debug('t locals()=%s args=%s kwargs=%s', repr(locals()), repr(args), repr(kwargs))
-        log4.debug('t locals()=%s args=%s kwargs=%s', repr(locals()), repr(args), repr(kwargs))
 
-        log2 = get_class_logger(func, depth=1)
+        # _log4.debug('t locals()=%s args=%s kwargs=%s', pf(locals()), pf(args), pf(kwargs))
+
+        # _log2 = get_class_logger(func, depth=1)
         # log2.debug('wrapper? %s', func_name)
 
-        log3 = get_logger(func_name)
+        # _log3 = get_logger(func_name)
         # log3.debug('log_name=%s, log_name1=%s, log2_name=%s, logfunc_name=%s', log_name, log_name1, log2_name, func_name)
 
         try:
@@ -204,8 +224,11 @@ def t(func):
             log.exception(e)
             raise
 
-        log.debug('t ret=%s', repr(ret))
-        log4.debug('t ret=%s', repr(ret))
+        # _log.debug('t_log ret=%s', repr(ret))
+        # _log1.debug('t_log1 ret=%s', repr(ret))
+        # _log2.debug('t_log2 ret=%s', repr(ret))
+        # _log3.debug('t_log3 ret=%s', repr(ret))
+        _log4.debug('%s() returned: %s', full_func_name, repr(ret))
 
         return ret
 
@@ -312,12 +335,13 @@ quickstart = default_setup
 # From https://stackoverflow.com/a/47956089
 def get_stack_size():
     """Get stack size for caller's frame.
-
-    %timeit len(inspect.stack())
-    8.86 ms +/- 42.5 us per loop (mean +/- std. dev. of 7 runs, 100 loops each)
-    %timeit get_stack_size()
-    4.17 us +/- 11.5 ns per loop (mean +/- std. dev. of 7 runs, 100000 loops each)
     """
+
+    # %timeit len(inspect.stack())
+    # 8.86 ms +/- 42.5 us per loop (mean +/- std. dev. of 7 runs, 100 loops each)
+    # %timeit get_stack_size()
+    # 4.17 us +/- 11.5 ns per loop (mean +/- std. dev. of 7 runs, 100000 loops each)
+
     size = 2  # current frame and caller's frame always exist
     while True:
         try:
