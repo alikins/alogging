@@ -6,7 +6,7 @@ import os
 import sys
 
 from alogging.pp import pf
-import prettyprinter
+# import prettyprinter
 
 HAS_COLOR_DEBUG = False
 try:
@@ -272,7 +272,7 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
         mp_log.addHandler(stream_handler)
 
     if use_root_logger:
-        setup_root_logger(root_level=logging.DEBUG)
+        setup_root_logger(root_level=logging.DEBUG, handlers=[stream_handler])
 
     # import logging_tree
     # logging_tree.printout()
