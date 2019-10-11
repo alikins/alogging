@@ -27,7 +27,7 @@ setup(
     author="Adrian Likins",
     author_email='adrian@likins.com',
     url='https://github.com/alikins/alogging',
-    packages=find_packages(include=['alogging']),
+    packages=find_packages(include=['alogging', 'alogging.formatters', 'alogging.filters']),
     include_package_data=True,
     install_requires=requirements,
     license="MIT license",
