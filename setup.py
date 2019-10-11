@@ -21,7 +21,7 @@ test_requirements = [
 
 setup(
     name='alogging',
-    version='0.2.1',
+    version='0.3.0',
     description="a collection of logging utilities",
     long_description=readme,
     author="Adrian Likins",
