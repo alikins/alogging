@@ -17,4 +17,4 @@ __all__ = ['pf', 'pp',
            'get_stack_size',
            'env_log_level']
 
-__version__ = '__version__ = '0.3.1''
+__version__ = '0.3.1'
