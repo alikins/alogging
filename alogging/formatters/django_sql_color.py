@@ -29,5 +29,5 @@ class DjangoDbSqlColorFormatter(logging.Formatter):
         return super(DjangoDbSqlColorFormatter, self).format(record)
 
     def __repr__(self):
-        buf = '%s(fmt="%s", options=%s)' % (self.__class__.__name, self._fmt, self.options)
+        buf = '%s(fmt="%s", options=%s)' % (self.__class__.__name__, self._fmt, self.options)
         return buf
