@@ -2,6 +2,9 @@ import logging
 
 import sqlparse
 
+# TODO: Could add a filter that uses sqlparse to extract record attributes
+#       for table, statement type, etc.
+
 
 class DjangoDbSqlFormatter(logging.Formatter):
     '''pretty print django.db sql'''
