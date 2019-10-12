@@ -1,0 +1,15 @@
+# test debris
+.tox
+.pytest_cache
+.cache/
+results/
+junk/
+htmlcov/
+
+# packaging debris
+.*.egg-info
+
+.coverage
+# misc debris
+*.txt
+*.out

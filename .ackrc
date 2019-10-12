@@ -1,0 +1,16 @@
+
+# python build debris
+--ignore-dir=is:build
+--ignore-dir=is:dist
+
+# more misc python debris
+--ignore-dir=is:.cache
+--ignore-dir=is:.pytest_cache
+--ignore-dir=is:.venv
+--ignore-dir=is:htmlcov
+--ignore-dir=is:junk
+--ignore-dir=is:venv
+--ignore-dir=match:.*.egg-info
+--ignore-dir=match:\.tox
+--ignore-file=match:\.coverage
+
