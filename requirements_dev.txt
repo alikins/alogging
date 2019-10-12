@@ -1,6 +1,10 @@
+Sphinx
+bumpversion
+coverage
+flake8
+mock
 pytest
 tox
-mock
+wheel
+
 git+git://github.com/alikins/color_debug@master#egg=color_debug
-prettyprinter
-logging_tree
