@@ -1,7 +1,7 @@
 
 from .pp import pf, pp  # noqa
 from .echo import echo # noqa
-from .logger import a, t, default_setup, setup, setup_root_logger # noqa
+from .logger import a, t, app_setup, module_setup, setup, setup_root_logger # noqa
 from .logger import get_class_logger, get_class_logger_name # noqa
 from .logger import get_logger, get_logger_name # noqa
 from .logger import get_method_logger, get_method_logger_name # noqa
@@ -14,7 +14,7 @@ __all__ = ['formatters',
            'filters',
            'pf', 'pp',
            'echo',
-           'a', 't', 'default_setup', 'setup', 'setup_root_logger',
+           'a', 't', 'app_setup', 'module_setup', 'setup', 'setup_root_logger',
            'get_class_logger', 'get_class_logger_name',
            'get_logger', 'get_logger_name',
            'get_method_logger', 'get_method_logger_name',

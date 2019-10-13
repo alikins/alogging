@@ -22,8 +22,8 @@ log = logging.getLogger(__name__)
 # directory, add these directories to sys.path here. If the directory is
 # relative to the documentation root, use os.path.abspath to make it
 # absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
-
+# sys.path.insert(0, os.path.abspath('.'))
+# sys.path.insert(0, os.path.abspath('../'))
 # Get the project root dir, which is the parent dir of this
 cwd = os.getcwd()
 project_root = os.path.dirname(cwd)
@@ -31,13 +31,14 @@ project_root = os.path.dirname(cwd)
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and that its
 # version is used.
-sys.path.insert(0, project_root)
+sys.path.insert(0, os.path.abspath(project_root))
 
 import alogging
 
 log = alogging.default_setup(name='alogging_docs')
 log.debug('cwd: %s', cwd)
 log.debug('project_root: %s', project_root)
+log.debug('sys.path: %s', sys.path)
 
 # -- General configuration ---------------------------------------------
 

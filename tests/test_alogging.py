@@ -9,20 +9,21 @@ import helpers
 # yup, using the module under test to setup logging for its own tests
 log = alogging.get_logger()
 
-alogging.default_setup('')
+alogging.app_setup('')
 
 
 def a_callable(foo=None):
     return b_callable(foo, ['bar'])
 
+
 @alogging.t
 def b_callable(foo=None, bar=None):
-    #return '%s+%s' % (foo, bar)
+    # return '%s+%s' % (foo, bar)
     return foo + bar
 
 
-def test_log_setup():
-    log = alogging.default_setup('akl')
+def test_module_setup():
+    log = alogging.module_setup('akl')
     log.debug('foo %s', 'blip', extra={'bar': 'baz'})
 
 
@@ -97,9 +98,7 @@ def test_plain_t():
 
     frob_the_swab_bar('javale', 'mcgee')
 
-
 from alogging import t
-
 
 @t
 class Stuff(object):
@@ -162,7 +161,7 @@ def test_t():
 def test_stack_info():
     alogging.STACK_INFO = True
 
-    alogging.default_setup()
+    alogging.app_setup()
     slog = alogging.get_logger()
 
     def level_two(blip):
@@ -197,4 +196,3 @@ def test_env_log_level():
 def test_get_stack_size():
     res = alogging.get_stack_size()
     log.debug('res: %s', res)
-

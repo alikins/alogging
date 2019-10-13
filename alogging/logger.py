@@ -6,6 +6,7 @@ import os
 import sys
 
 from alogging.pp import pf
+from alogging.echo import echo_format
 # import prettyprinter
 
 HAS_COLOR_DEBUG = False
@@ -48,7 +49,8 @@ DEFAULT_FILE_DATEFMT_STRING = DEFAULT_STREAM_DATEFMT_STRING = DEFAULT_DATEFMT_ST
 # loglevel.ansible.inventory.manager.Manager=DEBUG ansible-playbook -v
 
 
-def env_log_level(var_name):
+def env_var(var_name):
+    '''See if 'Var_Name', 'VAR_NAME', or 'var_name' is an enviroment variable'''
 
     # be liberal in log env var name cap
     for env_var_candidates in (var_name, var_name.upper(), var_name.lower()):
@@ -63,6 +65,15 @@ def env_log_level(var_name):
         return None
 
     env_var_value = env_var_value.strip()
+
+    return env_var_value
+
+
+def env_log_level(var_name):
+    env_var_value = env_var(var_name)
+
+    if env_var_value is None:
+        return None
 
     log_level = getattr(logging, env_var_value, env_var_value)
 
@@ -118,6 +129,11 @@ def get_logger(name=None, depth=2):
         log = alogging.get_logger()
     '''
     name = name or get_logger_name(depth=depth)
+
+    # TODO: if we want to setup filters on each logger created,
+    #       we could do it here.
+    #       Or, set a default level/prop/.
+    #       Or just returning a custom logging.Logger subclass.
     return logging.getLogger(name)
 
 
@@ -152,7 +168,7 @@ def a(*args):
     if STACK_INFO:
         log._log(logging.DEBUG, 'd args=%s', repr(args), stack_info=True)
     else:
-        log._log(logging.DEBUG, 'd args=%s', repr(args))
+        log._log(logging.DEBUG, 'd args=%s echo_format:%s', (repr(args), echo_format(args[0])))
 
     # walk up the stack to find the first named logger?
     return args and args[0]
@@ -236,44 +252,54 @@ def t(func):
     return functools.update_wrapper(wrapper, func)
 
 
-def setup(name=None, level=None, fmt=None, stream_formatter=None,
-          file_formatter=None, use_root_logger=False, log_file=None):
-    if name is None:
-        name = 'alogging'
+# TODO: replace with loading a logging dict config from yaml config file
+def setup(name=None, stream_handler=None,
+          file_handler=None, use_root_logger=False):
+
+    #    if name is None:
+    #        name = 'alogging'
+
+    log_level = env_log_level('%s_log_level' % name) or logging.DEBUG
 
     use_multiprocessing = False
 
-    fmt_string = fmt or os.environ.get('%s_fmt_string' % name, None)
-
-    stream_formatter = stream_formatter or logging.Formatter(fmt=fmt_string)
-    file_formatter = file_formatter or logging.Formatter(fmt=fmt_string)
-
     log = logging.getLogger(name)
 
-    log.setLevel(level)
+    log.setLevel(log_level)
 
-    log_file = log_file or os.path.expanduser('~/.alogging.log')
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setLevel(level)
+    handlers = []
 
-    stream_handler = logging.StreamHandler()
-    stream_handler.setLevel(level)
+    if file_handler:
+        # log_file = log_file or os.path.expanduser('~/.alogging.log')
+        file_handler.setLevel(log_level)
+        handlers.append(file_handler)
 
-    stream_handler.setFormatter(stream_formatter)
-    file_handler.setFormatter(file_formatter)
+    if stream_handler:
+        stream_handler.setLevel(log_level)
+        handlers.append(stream_handler)
 
-    log.addHandler(stream_handler)
-    log.addHandler(file_handler)
+    if not handlers:
+        handlers = [logging.NullHandler()]
+
+    # If 'name' is not provided, the default logger name with be '', ie, the root
+    # logger. And the handlers will be attached to the root logger.
+    #
+    # If a 'name' is provided, then by default, the handlers will be attached to
+    # that logger by default. If 'use_root_logger' True, then handlers are added
+    # to root logger instead.
+    if use_root_logger:
+        setup_root_logger(root_level=logging.DEBUG, handlers=handlers)
+    else:
+        for handler in handlers:
+            log.addHandler(handler)
 
     if use_multiprocessing:
         import multiprocessing
         mp_log = multiprocessing.get_logger()
         mp_log.setLevel(multiprocessing.SUBDEBUG)
-        stream_handler.setLevel(multiprocessing.SUBDEBUG)
-        mp_log.addHandler(stream_handler)
-
-    if use_root_logger:
-        setup_root_logger(root_level=logging.DEBUG, handlers=[stream_handler])
+        if stream_handler:
+            stream_handler.setLevel(multiprocessing.SUBDEBUG)
+            mp_log.addHandler(stream_handler)
 
     # import logging_tree
     # logging_tree.printout()
@@ -282,8 +308,8 @@ def setup(name=None, level=None, fmt=None, stream_formatter=None,
 
 
 def setup_root_logger(root_level=None, handlers=None):
-    if not handlers:
-        handlers = [logging.NullHandler()]
+    # if not handlers:
+    #    handlers = [logging.NullHandler()]
 
     root_log_level = root_level or env_log_level('ROOT_LOG_LEVEL') or logging.INFO
 
@@ -294,7 +320,8 @@ def setup_root_logger(root_level=None, handlers=None):
         root_logger.addHandler(handler)
 
 
-def default_setup(name=None):
+def get_stream_handler(name=None):
+
     # stream_fmt_string = """%(asctime)s %(name)s %(process)d %(funcName)s:%(lineno)d - %(message)s"""
     # stream_fmt_string = DEFAULT_STREAM_FMT_STRING
     stream_fmt_string = os.environ.get('%s_fmt_string' % name, None) or DEFAULT_STREAM_FMT_STRING
@@ -323,14 +350,55 @@ def default_setup(name=None):
         stream_formatter = logging.Formatter(fmt=stream_fmt_string,
                                              datefmt=stream_datefmt_string)
 
-    log_level = env_log_level('%s_log_level' % name) or logging.DEBUG
+    stream_handler = logging.StreamHandler()
+    stream_handler.setFormatter(stream_formatter)
 
-    return setup(name=name, level=log_level, fmt=DEFAULT_FMT_STRING, stream_formatter=stream_formatter,
+    return stream_handler
+
+
+def get_file_handler(name):
+    fmt_string = os.environ.get('%s_fmt_string' % name, None) or DEFAULT_FILE_FMT_STRING
+
+    log_file = env_var('%s_log_file' % name) or env_var('alogging_log_file')
+
+    if log_file is None:
+        return None
+
+    file_handler = logging.FileHandler(log_file)
+    file_formatter = logging.Formatter(fmt=fmt_string)
+    file_handler.setFormatter(file_formatter)
+
+    return file_handler
+
+
+def app_setup(name=None):
+    '''Call this to setup a default logging setup in a script or apps __main__
+
+    This will create a root logger with some default handlers, as well as a logger
+    for 'name' if provided.
+    '''
+    stream_handler = get_stream_handler(name=name)
+
+    file_handler = get_file_handler(name=name)
+
+    return setup(name=name,
+                 stream_handler=stream_handler,
+                 file_handler=file_handler,
                  use_root_logger=True)
 
 
-# easier to remember alias
-quickstart = default_setup
+def module_setup(name=None, use_root_logger=False):
+    '''Call this to setup a default log setup from a library or module.
+
+    ie, where the app itself may be setting up handlers, root logger, etc'''
+    stream_handler = get_stream_handler(name=name)
+
+    file_handler = get_file_handler(name=name)
+
+    return setup(name=name,
+                 stream_handler=stream_handler,
+                 file_handler=file_handler,
+                 use_root_logger=use_root_logger)
 
 
 # From https://stackoverflow.com/a/47956089
