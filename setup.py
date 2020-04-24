@@ -11,6 +11,7 @@ with open('README.md') as readme_file:
 requirements = [
     "pygments",
     "sqlparse",
+    "logging_tree",
 ]
 
 setup_requirements = [
