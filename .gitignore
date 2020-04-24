@@ -3,6 +3,11 @@ junk/
 
 docs/_build/
 
+# make docs creates these
+docs/alogging.*.rst
+docs/alogging.rst
+docs/modules.rst
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
