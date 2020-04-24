@@ -2,6 +2,12 @@
 History
 =======
 
+0.4.1 (2020-04-24)
+------------------
+
+* Split 'default_setup' to 'app_setup' and 'module_setup'
+* Add docs and examples
+
 0.3.1 (2019-10-13)
 ------------------
 
