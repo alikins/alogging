@@ -9,7 +9,8 @@ with open('README.md') as readme_file:
     readme = readme_file.read()
 
 requirements = [
-    # TODO: put package requirements here
+    "pygments",
+    "sqlparse",
 ]
 
 setup_requirements = [
