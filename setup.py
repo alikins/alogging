@@ -5,7 +5,7 @@
 
 from setuptools import setup, find_packages
 
-with open('README.md') as readme_file:
+with open('README.rst') as readme_file:
     readme = readme_file.read()
 
 requirements = [
@@ -24,7 +24,7 @@ test_requirements = [
 setup(
     name='alogging',
     version='0.3.1',
-    description="a collection of logging utilities",
+    description="A collection of logging utilities",
     long_description=readme,
     author="Adrian Likins",
     author_email='adrian@likins.com',

@@ -1,8 +1,5 @@
-akl utils
-=========
+alogging utils
+==============
 
-python code and modules used by me.
+python logging tools and utils
 
-Adrian Likins
-alikins
-akl
