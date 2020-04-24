@@ -14,7 +14,8 @@ try:
     import color_debug
     HAS_COLOR_DEBUG = True
 except ImportError as e:
-    print(e)
+    pass
+    # print(e)
 
 # set to True if on py3 and you want stack_info log record populated
 # WARNING: STACK_INFO=True is not compatible with py2 and will break
