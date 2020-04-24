@@ -35,7 +35,7 @@ sys.path.insert(0, os.path.abspath(project_root))
 
 import alogging
 
-log = alogging.default_setup(name='alogging_docs')
+log = alogging.module_setup(name='alogging_docs')
 log.debug('cwd: %s', cwd)
 log.debug('project_root: %s', project_root)
 log.debug('sys.path: %s', sys.path)
