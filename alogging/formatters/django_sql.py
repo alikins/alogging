@@ -9,8 +9,10 @@ import sqlparse
 class DjangoDbSqlFormatter(logging.Formatter):
     '''pretty print django.db sql'''
 
-    def __init__(self, fmt=None, datefmt=None, options=None):
-        super(DjangoDbSqlFormatter, self).__init__(fmt=fmt, datefmt=datefmt)
+    def __init__(self, fmt=None, datefmt=None, options=None, style='%'):
+        super(DjangoDbSqlFormatter, self).__init__(fmt=fmt,
+                                                   datefmt=datefmt,
+                                                   style=style)
 
         self.options = options or {'reindent': True,
                                    'keyword_case': 'upper'}

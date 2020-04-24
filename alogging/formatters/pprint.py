@@ -4,8 +4,10 @@ import pprint
 
 class PPrintRecordFormatter(logging.Formatter):
     '''Pretty print the __dict__ of the log record.'''
-    def __init__(self, fmt=None, datefmt=None, options=None, indent=1):
-        super(PPrintRecordFormatter, self).__init__(fmt=fmt, datefmt=datefmt)
+    def __init__(self, fmt=None, datefmt=None, options=None, indent=1, style='%'):
+        super(PPrintRecordFormatter, self).__init__(fmt=fmt,
+                                                    datefmt=datefmt,
+                                                    style=style)
 
         self.indent = indent or options.get('indent') or 1
 

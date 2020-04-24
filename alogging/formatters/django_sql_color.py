@@ -9,8 +9,10 @@ from pygments.formatters import Terminal256Formatter
 class DjangoDbSqlColorFormatter(logging.Formatter):
     '''pretty print django.db sql with color by pyments'''
 
-    def __init__(self, fmt=None, datefmt=None, options=None):
-        super(DjangoDbSqlColorFormatter, self).__init__(fmt=fmt, datefmt=datefmt)
+    def __init__(self, fmt=None, datefmt=None, options=None, style='%'):
+        super(DjangoDbSqlColorFormatter, self).__init__(fmt=fmt,
+                                                        datefmt=datefmt,
+                                                        style=style)
 
         self.options = options or {'reindent': True,
                                    'keyword_case': 'upper'}
