@@ -2,14 +2,18 @@ import logging
 
 import sqlparse
 from pygments import highlight
-from pygments.lexers import SqlLexer
-from pygments.formatters import Terminal256Formatter
+from pygments.formatters import get_formatter_by_name
+from pygments.lexers import get_lexer_by_name
+from pygments.styles import get_style_by_name
 
 
 class DjangoDbSqlColorFormatter(logging.Formatter):
-    '''pretty print django.db sql with color by pyments'''
+    '''Pretty print django.db sql with color by pyments'''
 
-    def __init__(self, fmt=None, datefmt=None, options=None, style='%'):
+    def __init__(self, fmt=None, datefmt=None, options=None, style='%',
+                 pygments_lexer='postgres-console',
+                 pygments_formatter="terminal256",
+                 pygments_style="default"):
         super(DjangoDbSqlColorFormatter, self).__init__(fmt=fmt,
                                                         datefmt=datefmt,
                                                         style=style)
@@ -17,8 +21,13 @@ class DjangoDbSqlColorFormatter(logging.Formatter):
         self.options = options or {'reindent': True,
                                    'keyword_case': 'upper'}
 
-        self._lexer = SqlLexer()
-        self._formatter = Terminal256Formatter()
+        # postgres-console, postgres, rql, sql, sqlite3, mysql, plpgsql, tsql
+        self._lexer = get_lexer_by_name(pygments_lexer)
+
+        pygments_style = get_style_by_name(pygments_style)
+
+        # terminal256, terminal, terminal16m, text
+        self._formatter = get_formatter_by_name(pygments_formatter, style=pygments_style)
 
     def format(self, record):
         pretty_sql = sqlparse.format(record.sql,
@@ -26,8 +35,6 @@ class DjangoDbSqlColorFormatter(logging.Formatter):
 
         pretty_sql = highlight(pretty_sql, self._lexer, self._formatter)
         record.sql = pretty_sql
-        # import pprint
-        # return '\n__dict__=%s\n' % pprint.pformat(record.__dict__)
         return super(DjangoDbSqlColorFormatter, self).format(record)
 
     def __repr__(self):
