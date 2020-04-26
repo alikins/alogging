@@ -126,6 +126,16 @@ def get_logger(name=None, depth=2):
 
         import alogging
         log = alogging.get_logger()
+
+    Args:
+        name (str): Optional logger name to use to override the
+            default one chosen automatically.
+        depth (int): Optional depth of stack to influence where
+            get_logger looks to automatically choose a logger name.
+            Default is 2.
+
+    Returns:
+        logging.Logger: A logger
     '''
     name = name or get_logger_name(depth=depth)
 
@@ -157,10 +167,16 @@ def get_method_logger(depth=2):
 
 
 def a(*args):
-    '''Log the args of 'a' and returns the args.
+    '''
+    Log the args of 'a' and returns the args.
 
-       Basically, log info about whatever it wraps, but returns it so
-       it can continue to be callled.
+    Basically, log info about whatever it wraps, but returns it so
+    it can continue to be callled.
+
+    Args:
+       args (tuple): The args to pass through to whatever is wrapped
+
+    Returns: (tuple): The args that were passed in.
     '''
     log_name = get_logger_name(depth=2)
     log = logging.getLogger(log_name)
@@ -375,6 +391,10 @@ def app_setup(name=None):
 
     This will create a root logger with some default handlers, as well as a logger
     for 'name' if provided.
+
+    Args:
+        name: (str): If provided, create a logging.Logger with this name
+
     '''
     stream_handler = get_stream_handler(name=name)
 
