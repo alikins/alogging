@@ -1,0 +1,90 @@
+---
+version: 1
+disable_existing_loggers: false
+filters:
+  sql_excludes:
+    (): alogging.filters.django_sql_excludes.DjangoDbSqlExcludeFilter
+    excludes:
+      - core_contentappstatus
+      - last_heartbeat
+formatters:
+  simple:
+    format: "{levelname} {message}"
+    style: "{"
+  verbose:
+    format:
+      "{levelname} {asctime} {name} {module}:{funcName}:{lineno:d} {process:d}
+      {thread:d} {message}"
+    style: "{"
+  sql_verbose:
+    format:
+      "{levelname} {asctime} {name} {module}:{funcName}:{lineno:d} {process:d} {thread:d} {message}\n## BEGIN ##\n{sql}\n## PARAMS ##\n{params}\n## END ##'"
+    style: "{"
+  sql_formatted:
+    '()': alogging.formatters.django_sql_color.DjangoDbSqlColorFormatter
+    format:
+      "{levelname} {asctime} {name} {module}:{funcName}:{lineno:d} {process:d} {thread:d} {message}\n## BEGIN ##\n{sql}\n## PARAMS ##\n{params}\n## END ##'"
+    style: "{"
+    options:
+      reindent: true
+      keyword_case: 'upper'
+      pygments_style: 'colorful'
+      pygments_formatter: 'terminal256'
+      pygments_lexer: 'postgres'
+
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: verbose
+    level: DEBUG
+  sql_console:
+    class: logging.StreamHandler
+    formatter: sql_formatted
+    filters:
+      - sql_excludes
+    level: DEBUG
+loggers:
+  "":
+    handlers:
+      - console
+    level: DEBUG
+  django:
+    level: DEBUG
+    propagate: true
+  django.server:
+    level: DEBUG
+    # propagate: true
+  django.db:
+    handlers:
+      - sql_console
+    level: DEBUG
+    propagate: false
+  django.request:
+    level: DEBUG
+    # propagate: false
+  django.utils.autoreload:
+    level: ERROR
+  my_django_app:
+    level: DEBUG
+  my_django_app.auth:
+    level: DEBUG
+  requests:
+    handlers:
+      - console
+    level: DEBUG
+  rq:
+    level: INFO
+  urllib3:
+    handlers:
+      - console
+    level: DEBUG
+  # stuff not useful for DEBUG
+  MARKDOWN:
+    level: INFO
+  aiohttp:
+    level: INFO
+  asyncio:
+    level: INFO
+  # Used by django_extensions shell_plus with ptpython
+  parso:
+    level: INFO
