@@ -33,7 +33,7 @@ project_root = os.path.dirname(cwd)
 # version is used.
 sys.path.insert(0, os.path.abspath(project_root))
 
-import alogging
+import alogging # noqa
 
 log = alogging.module_setup(name='alogging_docs')
 log.debug('cwd: %s', cwd)
