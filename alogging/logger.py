@@ -14,9 +14,8 @@ try:
     # https://github.com/alikins/color_debug
     import color_debug
     HAS_COLOR_DEBUG = True
-except ImportError as e:
+except ImportError:
     pass
-    # print(e)
 
 # set to True if on py3 and you want stack_info log record populated
 # WARNING: STACK_INFO=True is not compatible with py2 and will break
@@ -334,11 +333,11 @@ def get_stream_handler(name=None):
 
     if HAS_COLOR_DEBUG:
         color_groups = [
-                        ('funcName', ['funcName', 'lineno']),
-                        ('levelname', ['levelno']),
-                        ('name', ['stack_info']),
-                        # ('name', ['filename', 'module',  'pathname']),
-                        ('process', ['processName'])
+            ('funcName', ['funcName', 'lineno']),
+            ('levelname', ['levelno']),
+            ('name', ['stack_info']),
+            # ('name', ['filename', 'module',  'pathname']),
+            ('process', ['processName'])
         ]
         stream_formatter = color_debug.color_debug.ColorFormatter(fmt=stream_fmt_string,
                                                                   default_color_by_attr='name',
