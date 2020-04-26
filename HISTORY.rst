@@ -2,6 +2,12 @@
 History
 =======
 
+0.4.2 (2020-04-25)
+------------------
+
+* Add pygments options to django_sql_color formatter
+* Minor docs improvements
+
 0.4.1 (2020-04-24)
 ------------------
 
