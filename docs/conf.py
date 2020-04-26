@@ -47,7 +47,8 @@ log.debug('sys.path: %s', sys.path)
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.viewcode']
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.autosummary',
+              'sphinx.ext.viewcode', 'sphinx.ext.napoleon']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -87,6 +88,17 @@ release = alogging.__version__
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 exclude_patterns = ['_build']
+
+# napoleon uses .. attribute by default, but :ivar: is more succinct and looks better,
+# particularly on classes with a lot of attributes, like django models and related objects
+napoleon_use_ivar = True
+
+# Set autodoc default options
+# Document all module/class/etc members, even if they have no docstring.
+# Show class inheritance, and group class members together by type (attr, method, etc)
+autodoc_default_flags = ['members', 'undoc-members']
+autodoc_member_order = 'groupwise'
+autoclass_content = 'both'
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -195,7 +207,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'color_debugdoc'
+htmlhelp_basename = 'alogging'
 
 
 # -- Options for LaTeX output ------------------------------------------
