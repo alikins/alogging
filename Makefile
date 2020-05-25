@@ -48,7 +48,8 @@ clean-docs:
 docs: ## generate Sphinx HTML documentation, including API docs
 	rm -f docs/alogging.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc --ext-autodoc --module-first --implicit-namespaces --force --separate --output-dir docs/ alogging
+	cd docs
+	sphinx-apidoc --ext-autodoc --module-first --implicit-namespaces --force --separate --output-dir source/ ../alogging
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 
