@@ -42,14 +42,11 @@ coverage: ## check code coverage quickly with the default Python
 
 clean-docs:
 	rm -rf docs/_build/*
-	rm -f docs/alogging.rst
-	rm -f docs/modules.rst
 
-docs: ## generate Sphinx HTML documentation, including API docs
-	rm -f docs/alogging.rst
-	rm -f docs/modules.rst
-	cd docs
-	sphinx-apidoc --ext-autodoc --module-first --implicit-namespaces --force --separate --output-dir source/ ../alogging
+docs-api:
+	sphinx-apidoc --ext-autodoc --module-first --implicit-namespaces --force --separate --output-dir docs/ alogging
+
+docs: ## generate Sphinx HTML documentation
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 
