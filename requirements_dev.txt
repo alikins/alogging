@@ -3,7 +3,7 @@ sphinxcontrib-napoleon
 sphinx-rtd-theme
 bumpversion
 coverage
-flake8
+flake8 >=3.8.0
 mock
 pytest
 tox
