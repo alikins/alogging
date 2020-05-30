@@ -2,7 +2,7 @@ from alogging.echo import echo, echo_format
 
 x = []
 for i in range(37, 52):
-    x.append((i, '.'*i))
+    x.append((i, '.' * i))
 
 blip = [1, 2, 3, 4, x, ['list1', 'list2', {'some_dict_key': ('a tuple 1', 'a tuple 2')}]]
 

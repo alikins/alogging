@@ -3,6 +3,7 @@ import mock
 
 # from akl import alogging
 import alogging
+from alogging import t
 
 import helpers
 
@@ -98,7 +99,6 @@ def test_plain_t():
 
     frob_the_swab_bar('javale', 'mcgee')
 
-from alogging import t
 
 @t
 class Stuff(object):
@@ -129,14 +129,14 @@ def test_t():
         return helpers.some_method(bar)
 
     res = local_method('expected')
-    # log.debug('res: %s', res)
+    log.debug('res: %s', res)
+
     res = alogging.a(local_method('expected'))
-    # log.debug('res via a: %s', res)
+    log.debug('res via a: %s', res)
 
     some_inst = helpers.SomeClass()
     res2 = some_inst.another_method('mmm', 'foobar')
-
-    # log.debug('res2: %s', res2)
+    log.debug('res2: %s', res2)
 
     another_inst = helpers.AnotherClass('fOO')
     res3 = another_inst.blip()
@@ -144,6 +144,7 @@ def test_t():
 
     sub_inst = helpers.SubAnotherClass('SubF00')
     res4 = sub_inst.blip()
+    log.debug('res4: %s', res4)
 
     @t
     def raise_exception():
