@@ -1,6 +1,6 @@
 Sphinx==3.0.4
 sphinxcontrib-napoleon==0.7
-sphinx-rtd-theme
+sphinx-rtd-theme==0.4.3
 bumpversion
 coverage
 flake8
