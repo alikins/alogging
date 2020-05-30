@@ -14,9 +14,12 @@ alogging
         :alt: Documentation Status
 
 .. image:: https://pyup.io/repos/github/alikins/alogging/shield.svg
-     :target: https://pyup.io/repos/github/alikins/alogging/
-     :alt: Updates
+        :target: https://pyup.io/repos/github/alikins/alogging/
+        :alt: Updates
 
+.. image:: https://github.com/alikins/alogging/workflows/Python%20package/badge.svg
+        :target: https://github.com/alikins/alogging/actions?query=workflow%3A%22Python+package%22
+        :alt: Python package github action
 
 Python logging tools and utils.
 
