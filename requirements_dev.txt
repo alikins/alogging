@@ -1,5 +1,5 @@
 Sphinx==3.0.4
-sphinxcontrib-napoleon
+sphinxcontrib-napoleon==0.7
 sphinx-rtd-theme
 bumpversion
 coverage
