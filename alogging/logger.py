@@ -9,11 +9,11 @@ from alogging.pp import pf
 from alogging.echo import echo_format
 # import prettyprinter
 
-HAS_COLOR_DEBUG = False
+HAS_COLOR_BUCKET = False
 try:
-    # https://github.com/alikins/color_debug
-    import color_debug
-    HAS_COLOR_DEBUG = True
+    # https://github.com/alikins/color_bucket_logger
+    import color_bucket_logger
+    HAS_COLOR_BUCKET = True
 except ImportError:
     pass
 
@@ -347,7 +347,7 @@ def get_stream_handler(name=None):
     if stack_info:
         stream_fmt_string += STACK_INFO_FMT_STRING
 
-    if HAS_COLOR_DEBUG:
+    if HAS_COLOR_BUCKET:
         color_groups = [
             ('funcName', ['funcName', 'lineno']),
             ('levelname', ['levelno']),
@@ -355,12 +355,12 @@ def get_stream_handler(name=None):
             # ('name', ['filename', 'module',  'pathname']),
             ('process', ['processName'])
         ]
-        stream_formatter = color_debug.color_debug.ColorFormatter(fmt=stream_fmt_string,
-                                                                  default_color_by_attr='name',
-                                                                  # default_color_by_attr='process',
-                                                                  auto_color=True,
-                                                                  color_groups=color_groups,
-                                                                  datefmt=stream_datefmt_string)
+        stream_formatter = color_bucket_logger.color_debug.ColorFormatter(fmt=stream_fmt_string,
+                                                                          default_color_by_attr='name',
+                                                                          # default_color_by_attr='process',
+                                                                          auto_color=True,
+                                                                          color_groups=color_groups,
+                                                                          datefmt=stream_datefmt_string)
     else:
         stream_formatter = logging.Formatter(fmt=stream_fmt_string,
                                              datefmt=stream_datefmt_string)
