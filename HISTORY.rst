@@ -2,6 +2,11 @@
 History
 =======
 
+0.4.3 (2020-06-23)
+------------------
+
+* use 'color_bucket_logger' if available for default setup
+
 0.4.3 (2020-05-28)
 ------------------
 

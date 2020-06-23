@@ -1,7 +1,7 @@
 Sphinx
 sphinxcontrib-napoleon
 sphinx-rtd-theme
-bumpversion
+bump2version
 coverage
 flake8 >=3.8.0
 mock

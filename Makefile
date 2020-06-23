@@ -57,10 +57,25 @@ servedocs: docs ## compile the docs watching for changes
 #	python setup.py sdist upload
 #	python setup.py bdist_wheel upload
 
-dist: clean ## builds source and wheel package
+dev/dist: clean ## builds source and wheel package
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
 
 install: clean ## install the package to the active Python's site-packages
 	python setup.py install
+
+dev/bumpversion-patch:
+	bump2version --verbose patch
+
+dev/bumpversion-minor:
+	bump2version --verbose minor
+
+dev/bumpversion-major:
+	bump2version --verbose major
+
+dev/twine-check:
+	twine check dist/*
+
+dev/release: dev/twine-check
+	twine upload dist/*
