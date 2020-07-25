@@ -9,9 +9,11 @@ from .logger import get_stack_size # noqa
 from .logger import env_log_level # noqa
 from . import formatters
 from . import filters
+from . import record_factories
 
 __all__ = ['formatters',
            'filters',
+           'record_factories',
            'pf', 'pp',
            'echo',
            'a', 't', 'app_setup', 'module_setup', 'setup', 'setup_root_logger',
