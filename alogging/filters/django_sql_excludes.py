@@ -19,3 +19,6 @@ class DjangoDbSqlExcludeFilter(logging.Filter):
                 return 0
 
         return 1
+
+    def __repr__(self):
+        return f"{__name__}.{self.__class__.__name__}(excludes={self.excludes})"
