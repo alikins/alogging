@@ -1,0 +1,32 @@
+---
+version: 1
+disable_existing_loggers: false
+filters:
+  slow_sql_only:
+    (): alogging.filters.django_sql_slow_queries.DjangoDbSqlSlowQueriesFilter
+    min_duration: 0.1
+
+formatters:
+  sql_formatted:
+    '()': alogging.formatters.django_sql.DjangoDbSqlFormatter
+    format:
+      "{levelname} {asctime} {name} {module}:{funcName}:{lineno:d} {process:d} {thread:d} {message}\n## BEGIN ##\n{sql}\n## PARAMS ##\n{params}\n## END ##'"
+    style: "{"
+    options:
+      reindent: true
+      keyword_case: 'upper'
+
+handlers:
+  sql_console:
+    class: logging.StreamHandler
+    formatter: sql_formatted
+    filters:
+      - slow_sql_only
+    level: DEBUG
+
+loggers:
+  django.db:
+    handlers:
+      - sql_console
+    level: DEBUG
+    propagate: false
