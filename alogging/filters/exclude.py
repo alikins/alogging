@@ -23,6 +23,9 @@ class ExcludeFilter(logging.Filter):
         self.operator = operators.get(operator, all)
 
     def filter(self, record):
+        # Don't exclude anything if given no excludes
+        if not self.excludes:
+            return True
         checks = [self.check_value(field_name, value, record) for (field_name, value) in self.excludes]
         # ~ any() or all()
         return not self.operator(checks)
