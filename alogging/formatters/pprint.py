@@ -15,7 +15,9 @@ class PPrintRecordFormatter(logging.Formatter):
         res_dict = record.__dict__.copy()
         message = record.getMessage()
         res_dict['message'] = message
-        res = pprint.pformat(res_dict, indent=self.indent)
+        rendered = super().format(record)
+        res = '\n'.join([rendered,
+                         pprint.pformat(res_dict, indent=self.indent)])
         return res
 
     def __repr__(self):
