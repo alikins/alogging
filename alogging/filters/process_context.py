@@ -32,7 +32,7 @@ class ProcessContextLoggingFilter(object):
 
     user is the user the process is running as."""
 
-    def __init__(self, name):
+    def __init__(self, name=""):
         self.name = name
         self._current_process = CurrentProcess(args=sys.argv[:])
 
