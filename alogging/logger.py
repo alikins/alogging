@@ -355,12 +355,12 @@ def get_stream_handler(name=None):
             # ('name', ['filename', 'module',  'pathname']),
             ('process', ['processName'])
         ]
-        stream_formatter = color_bucket_logger.color_debug.ColorFormatter(fmt=stream_fmt_string,
-                                                                          default_color_by_attr='name',
-                                                                          # default_color_by_attr='process',
-                                                                          auto_color=True,
-                                                                          color_groups=color_groups,
-                                                                          datefmt=stream_datefmt_string)
+        stream_formatter = color_bucket_logger.ColorFormatter(fmt=stream_fmt_string,
+                                                              default_color_by_attr='name',
+                                                              # default_color_by_attr='process',
+                                                              auto_color=True,
+                                                              color_groups=color_groups,
+                                                              datefmt=stream_datefmt_string)
     else:
         stream_formatter = logging.Formatter(fmt=stream_fmt_string,
                                              datefmt=stream_datefmt_string)

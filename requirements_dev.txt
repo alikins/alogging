@@ -2,11 +2,10 @@ Sphinx
 sphinxcontrib-napoleon
 sphinx-rtd-theme
 bump2version
+color_bucket_logger
 coverage
 flake8 >=3.8.0
 mock
 pytest
 tox
 wheel
-
-git+git://github.com/alikins/color_debug@master#egg=color_debug
