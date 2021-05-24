@@ -23,4 +23,4 @@ __all__ = ['formatters',
            'get_stack_size',
            'env_log_level']
 
-__version__ = '0.4.4'
+__version__ = '0.5.0'
