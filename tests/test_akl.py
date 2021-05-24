@@ -1,10 +1,20 @@
 from alogging.echo import echo, echo_format
 
-x = []
-for i in range(37, 52):
-    x.append((i, '.' * i))
 
-blip = [1, 2, 3, 4, x, ['list1', 'list2', {'some_dict_key': ('a tuple 1', 'a tuple 2')}]]
+def gen_x():
+    _x = []
+    for i in range(37, 52):
+        _x.append((i, '.' * i))
+    return _x
+
+
+def gen_blip(_x):
+    _blip = [1, 2, 3, 4, _x, ['list1', 'list2', {'some_dict_key': ('a tuple 1', 'a tuple 2')}]]
+    return _blip
+
+
+x = gen_x()
+blip = gen_blip(x)
 
 
 def blorp(thing):

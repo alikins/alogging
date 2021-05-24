@@ -11,16 +11,16 @@ log = alogging.get_logger()
 @pytest.fixture
 def log_record():
     record_factory = logging.getLogRecordFactory()
-    log_record = record_factory('annoying',
-                                logging.DEBUG,
-                                '/dev/null/fake/module.py',
-                                42,
-                                "stuff_you_dont_to_hear: %s",
-                                args=('whatever',),
-                                exc_info=None,
-                                func='noisy_method',
-                                sinfo=None)
-    return log_record
+    _log_record = record_factory('annoying',
+                                 logging.DEBUG,
+                                 '/dev/null/fake/module.py',
+                                 42,
+                                 "stuff_you_dont_to_hear: %s",
+                                 args=('whatever',),
+                                 exc_info=None,
+                                 func='noisy_method',
+                                 sinfo=None)
+    return _log_record
 
 
 def test_no_excludes(log_record):

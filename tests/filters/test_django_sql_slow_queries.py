@@ -11,7 +11,7 @@ log = alogging.get_logger()
 
 @pytest.fixture
 def log_record():
-    log_record = logging.makeLogRecord({
+    _log_record = logging.makeLogRecord({
         'duration': 0.9,
         'created': 1621620910.5428703,
         'exc_info': None,
@@ -34,7 +34,7 @@ def log_record():
         'threadName': 'MainThread'}
     )
 
-    return log_record
+    return _log_record
 
 
 def test_duration_larger_than_limit(log_record):
