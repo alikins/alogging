@@ -49,16 +49,10 @@ DEFAULT_FILE_DATEFMT_STRING = DEFAULT_STREAM_DATEFMT_STRING = DEFAULT_DATEFMT_ST
 
 
 def env_var(var_name):
-    '''See if 'Var_Name', 'VAR_NAME', or 'var_name' is an enviroment variable'''
-
-    # be liberal in log env var name cap
-    for env_var_candidates in (var_name, var_name.upper(), var_name.lower()):
-        # print(env_var_candidates)
-        env_var_value = os.environ.get(env_var_candidates, None)
-        if env_var_value is not None:
-            continue
-
-    # print('%s=%s' % (var_name, env_var_value))
+    '''Fetch the env var by name'''
+    env_var_value = os.environ.get(var_name, None)
+    if env_var_value is not None:
+        return
 
     if not env_var_value:
         return None
