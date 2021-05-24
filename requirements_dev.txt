@@ -6,6 +6,8 @@ color_bucket_logger
 coverage
 flake8 >=3.8.0
 mock
+pylint
+pylint-pytest
 pytest
 tox
 wheel
