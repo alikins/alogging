@@ -2,6 +2,7 @@ import logging
 
 # TODO: include support for regex based excludes as well
 
+
 class ExcludeFilter(logging.Filter):
     '''Filter records with user provided values for record fields
 

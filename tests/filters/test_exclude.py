@@ -1,6 +1,4 @@
 import logging
-import os
-import pprint
 
 import pytest
 
@@ -8,6 +6,7 @@ import alogging
 import alogging.filters.exclude
 
 log = alogging.get_logger()
+
 
 @pytest.fixture
 def log_record():
@@ -43,4 +42,3 @@ def test_exclude_annoying_logger(log_record):
     kept = exclude_filter.filter(log_record)
     assert kept is False
     log.debug('log_record: %s', log_record)
-

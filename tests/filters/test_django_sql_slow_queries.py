@@ -1,5 +1,4 @@
 import logging
-import os
 import pprint
 
 import pytest
@@ -8,6 +7,7 @@ import alogging
 from alogging.filters.django_sql_slow_queries import DjangoDbSqlSlowQueriesFilter
 
 log = alogging.get_logger()
+
 
 @pytest.fixture
 def log_record():
@@ -46,6 +46,7 @@ def test_duration_larger_than_limit(log_record):
     # since this record was slow, we let it though
     log.debug('log_record: %s', pprint.pformat(log_record.__dict__))
     assert bool(kept) is True
+
 
 def test_duration_smaller_than_limit(log_record):
     # Set duration lower bound at 2 seconds
