@@ -54,7 +54,7 @@ def env_var(var_name):
     # be liberal in log env var name cap
     for env_var_candidates in (var_name, var_name.upper(), var_name.lower()):
         # print(env_var_candidates)
-        env_var_value = os.environ.get(var_name, None)
+        env_var_value = os.environ.get(env_var_candidates, None)
         if env_var_value is not None:
             continue
 
