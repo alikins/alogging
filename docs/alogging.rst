@@ -14,6 +14,7 @@ Subpackages
 
    alogging.filters
    alogging.formatters
+   alogging.record_factories
 
 Submodules
 ----------
