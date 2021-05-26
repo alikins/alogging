@@ -26,6 +26,7 @@ setup(
     version='0.6.0',
     description="A collection of logging utilities",
     long_description=readme,
+    long_description_content_type='text/x-rst',
     author="Adrian Likins",
     author_email='adrian@likins.com',
     url='https://github.com/alikins/alogging',
