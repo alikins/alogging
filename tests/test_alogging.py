@@ -195,3 +195,16 @@ def test_stack_info():
 def test_get_stack_size():
     res = alogging.get_stack_size()
     log.debug('res: %s', res)
+
+    def level_two(passed_in):
+        log.debug('some stuff, should include stack_info, passed_in=%s', passed_in)
+        return passed_in
+
+    def level_one(passed_in):
+        log.debug('alogging.STACK_INFO: %s', alogging.STACK_INFO)
+        alogging.a(passed_in)
+        return level_two(passed_in)
+
+    resp = level_one('stuff')
+    log.debug('resp: %s', resp)
+
